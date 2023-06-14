@@ -1,0 +1,66 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static "styles.css" %}">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <title>Look For Gamers | Joe Trott</title>
+</head>
+<body>
+    <nav class="w3-bar w3-dark-grey w3-large">
+        <div class="w3-center">
+            {% if request.path != "/home/all-posts/"%}
+                <a href="{%url 'homepage' "all-posts" %}" class="w3-bar-item w3-button w3-hover-none w3-text-light-blue w3-hover-text-white w3-padding-16">Home</a>
+            {% endif %}
+            <div class="w3-bar-item w3-dropdown-hover w3-dark-grey">
+                <button class="w3-button w3-text-light-blue">Find Group</button>
+                <div class="w3-dropdown-content w3-bar-block w3-card-4">
+                    <a href="{%url 'homepage' "all-posts" %}" class="w3-bar-item w3-button">Any Platform</a>
+                    <a href="{% url 'homepage' "XBOX" %}" class="w3-bar-item w3-button">Xbox</a>
+                    <a href="{% url 'homepage' "PLAYSTATION" %}" class="w3-bar-item w3-button">Playstation</a>
+                    <a href="{% url 'homepage' "STEAM" %}" class="w3-bar-item w3-button">Steam/PC</a>
+                </div>
+            </div>
+            {% if request.path != "/create-post/"%}
+                <a href="{% url 'create-post' %}" class="w3-bar-item w3-button w3-hover-none w3-text-light-blue w3-hover-text-white w3-padding-16">Create Post</a>
+            {% endif %}
+            {% if is_mod %}
+                <i class="w3-bar-item w3-button w3-hover-none w3-text-light-blue w3-hover-text-light-blue w3-padding-16">Moderator View</i>
+            {% endif %}
+        </div>
+        <a href="{% url 'logout' %}" class="w3-bar-item w3-button w3-hover-none w3-text-light-blue w3-hover-text-white w3-right w3-padding-16">Logout</a>
+        {%if request.user.is_authenticated == False %}
+            <a href="{% url 'login' %}" class="w3-bar-item w3-button w3-hover-none w3-text-light-blue w3-hover-text-white w3-right w3-padding-16">Login</a>
+            <a href="{% url 'register' %}" class="w3-bar-item w3-button w3-hover-none w3-text-light-blue w3-hover-text-white w3-right w3-padding-16">Register</a>
+        {% endif %}
+        <div class="w3-dropdown-hover w3-right">
+            {%if request.user.is_authenticated %}
+            <button class="w3-button w3-text-light-blue w3-padding-16">
+                {{request.user}}
+            </button>
+            {%endif%}
+            <div class="w3-dropdown-content w3-bar-block w3-card-4">
+                <a href="{%url 'my-posts' %}" class="w3-bar-item w3-button">My Posts</a>
+            </div>
+        </div>
+    </nav>
+    {% block content %}
+    {% for post in posts %}
+        <ul class="post-container">
+            <li class="post-header">{{post.header}}</li>
+            <div class="post-context">
+                <li class="post-context-item">{{post.platform}}</li>
+                <li class="post-context-item">{{post.author}}</li>
+                <li class="post-context-item">{{post.updated_at}}</li>
+            </div>
+            {% if is_mod %}
+                <a href="{% url "delete-post" post.id %}">delete</a>
+            {% endif %}
+        </ul>
+    {% endfor %}
+    {% endblock content%}
+</body>
+</html>

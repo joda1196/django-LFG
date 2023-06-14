@@ -1,0 +1,18 @@
+{% extends 'base.html' %} 
+{% block content %}
+{% if user_posts.count == 0%}
+    <h2 class="no-posts">No Posts Have Been Created</h2>
+{% endif %}
+{% for post in user_posts %}
+    <ul class="post-container">
+        <li class="post-header">{{post.header}}</li>
+        <div class="post-context">
+            <li class="post-context-item">{{post.platform}}</li>
+            <li class="post-context-item">{{post.author}}</li>
+            <li class="post-context-item">{{post.updated_at}}</li>
+        </div>
+        <a class="w3-button w3-text-light-blue w3-padding-16" href="{% url "update-post" post.id %}">update</a>
+        <a class="w3-button w3-text-light-blue w3-padding-16" href="{% url "delete-post" post.id %}">delete</a>
+    </ul>
+{% endfor %}
+{% endblock content %}
